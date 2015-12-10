@@ -1,12 +1,18 @@
+import { Observable } from './observable';
+import { View } from './view';
+import { extendable } from './utils';
 
+/*
 const EVENTS = 'init inited mount mounted unmount unmounted sort sorted update updated destroy'.split(' ').reduce((obj, key) => {
   obj[key] = true;
   return obj;
 }, {});
-
-import { Observable } from './observable';
-import { View } from './view';
-import { extendable } from './utils';
+*/
+const EVENTS: Map<string,boolean> = 'init inited mount mounted unmount unmounted sort sorted update updated destroy'
+                       .split(' ').reduce((map, key) => {
+  map.set(key, true);
+  return map;
+}, new Map<string,boolean>());
 
 export class ViewList extends Observable {
   /**
@@ -23,25 +29,25 @@ export class ViewList extends Observable {
    * @property {Function} [destroy] 'destroy' callback shortcut
    * @property {*} [*] Anything else you want to pass on to View
    */
-
+  
+    /**
+     * Views by key, if key provided
+     * @type {Object}
+     */
+    lookup: Object = {};
+    /**
+     * list of Views
+     * @type {Array}
+     */
+    views: View[] = []; 
+    
   /**
    * Creates list of Views to be mounted to a View
    * @param  {ViewListOptions} options ViewList options
    * @return {ViewList}
    */
-  constructor (options) {
+  constructor (options: Object) {
     super();
-
-    /**
-     * Views by key, if key provided
-     * @type {Object}
-     */
-    this.lookup = {};
-    /**
-     * list of Views
-     * @type {Array}
-     */
-    this.views = [];
 
     for (const key in options) {
       if (EVENTS[key]) {
@@ -55,7 +61,7 @@ export class ViewList extends Observable {
    * Sync list of Views with data provided
    * @param {Array} data Data for syncing list of Views
    */
-  setData (data) {
+  setData (data: any[]): void {
     const views = new Array(data.length);
     const lookup = {};
     const currentViews = this.views;
@@ -68,7 +74,7 @@ export class ViewList extends Observable {
       const ViewClass = this.View || View;
       const view = (key ? currentLookup[id] : currentViews[i]) || new ViewClass();
 
-      for (let j = 0; j < EVENTS.length; j++) {
+      for (let j = 0; j < EVENTS.size; j++) {
         const name = EVENTS[j];
         view.on(name, (...args) => {
           this.trigger(name, [view, ...args]);

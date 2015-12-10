@@ -1,12 +1,12 @@
 
 import { extendable } from './utils';
 import { Observable } from './observable';
+import {ViewList}     from './viewlist'
 
-const EVENT = 'init inited mount mounted unmount unmounted sort sorted update updated destroy'.split(' ').reduce((obj, name) => {
-  obj[name] = name;
-  return obj;
-}, {});
-
+const EVENT = {init:'init', inited:'inited', mount:'mount', mounted:'mounted', 
+               unmount:'unmount', unmounted:'unmounted', sort:'sort', sorted:'sorted', 
+               update:'update', updated:'updated', destroy:'destroy'};
+               
 export class View extends Observable {
   /**
    * @external {HTMLElement} https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
@@ -26,6 +26,47 @@ export class View extends Observable {
    * @property {Function} [destroy] 'destroy' callback shortcut
    * @property {*} [*] Anything else you want to pass on to View
    */
+  
+    /**
+     * el attributes cache
+     * @type {Object}
+     */
+    attrs: Object = {};
+    /**
+     * el classNames cache
+     * @type {Object}
+     */
+    classes: Object = {};
+    /**
+     * HTMLElement
+     * @type {el|HTMLElement}
+     */
+    el: HTMLElement = null;
+    /**
+     * Proxy event listeners cache
+     * @type {Array}
+     */
+    eventListeners: Object[] = [];
+    /**
+     * el innerHTML cache
+     * @type {String}
+     */
+    html: string = '';
+    /**
+     * Listeners cache
+     * @type {Object}
+     */
+    listeners: Object = {};
+    /**
+     * el styles cache
+     * @type {Object}
+     */
+    styles: Object = {};
+    /**
+     * el textContent cache
+     * @type {String}
+     */
+    text: string = '';
 
   /**
    * Creates View
@@ -33,50 +74,8 @@ export class View extends Observable {
    * @param  {*} [data]    Any data to pass on to init()
    * @return {View}
    */
-
-  constructor (options = {}, data) {
+  constructor (options: Object = {}, data: any) {
     super();
-
-    /**
-     * el attributes cache
-     * @type {Object}
-     */
-    this.attrs = {};
-    /**
-     * el classNames cache
-     * @type {Object}
-     */
-    this.classes = {};
-    /**
-     * HTMLElement
-     * @type {el|HTMLElement}
-     */
-    this.el = null;
-    /**
-     * Proxy event listeners cache
-     * @type {Array}
-     */
-    this.eventListeners = [];
-    /**
-     * el innerHTML cache
-     * @type {String}
-     */
-    this.html = '';
-    /**
-     * Listeners cache
-     * @type {Object}
-     */
-    this.listeners = {};
-    /**
-     * el styles cache
-     * @type {Object}
-     */
-    this.styles = {};
-    /**
-     * el textContent cache
-     * @type {String}
-     */
-    this.text = '';
 
     for (const key in options) {
       if (EVENT[key]) {
@@ -96,7 +95,7 @@ export class View extends Observable {
    * @param {*|null} value Attribute value or null to remove
    * @return {View}
    */
-  setAttr (name, value) {
+  setAttr (name: string, value: any): View {
     if (!this.attrs) this.attrs = {};
 
     if (this.attrs[name] === value) {
@@ -118,7 +117,7 @@ export class View extends Observable {
    * @param {Boolean} value true / false
    * @return {View}
    */
-  setClass (key, value) {
+  setClass (key: string, value: boolean): View {
     if (!this.classes) this.classes = {};
 
     if (this.classes[key] === value) {
@@ -139,7 +138,7 @@ export class View extends Observable {
    * @param {*|null} value Style value or null to remove
    * @return {View}
    */
-  setStyle (key, value) {
+  setStyle (key: string, value: any): View {
     if (!this.styles) this.styles = {};
 
     if (this.styles[key] === value) {
@@ -155,7 +154,7 @@ export class View extends Observable {
    * @param {String} text Text to be applied to textContent
    * @return {View}
    */
-  setText (text) {
+  setText (text: string): View {
     if (this.text === text) {
       return this;
     }
@@ -169,7 +168,7 @@ export class View extends Observable {
    * @param {String} html HTML string
    * @return {View}
    */
-  setHTML (html) {
+  setHTML (html: string): View {
     if (this.html === html) {
       return this;
     }
@@ -185,7 +184,7 @@ export class View extends Observable {
    * @param {Boolean}   useCapture Use capture or not
    * @return {View}
    */
-  addListener (name, callback, useCapture) {
+  addListener (name: string, callback: Function, useCapture: boolean): View {
     const listener = {
       name: name,
       callback: callback,
@@ -206,7 +205,7 @@ export class View extends Observable {
    * @param  {Function} [callback]   Listener callback
    * @return {View}
    */
-  removeListener (name, callback) {
+  removeListener (name: string, callback: Function): View {
     const listeners = this.eventListeners;
     if (!listeners) {
       return this;
@@ -238,7 +237,7 @@ export class View extends Observable {
    * @param {View|ViewList} child Child View/ViewList to be added
    * @return {View}
    */
-  addChild (child) {
+  addChild (child: View|ViewList): View {
     if (child.views) {
       child.parent = this;
       return this.setChildren(...child.views);
@@ -268,7 +267,7 @@ export class View extends Observable {
    * @param {View|HTMLElement} before Reference View/HTMLElement
    * @return {View}
    */
-  addBefore (child, before) {
+  addBefore (child: View, before: View|HTMLElement): View {
     let sorting = false;
 
     if (child.parent) {
@@ -294,7 +293,7 @@ export class View extends Observable {
    * @param {View|ViewList} ...views [description]
    * @return {View}
    */
-  setChildren (...views) {
+  setChildren (...views: (View|ViewList)[]): View {
     if (views[0].views) {
       views[0].parent = this;
       if (!views[0].views.length) {
@@ -336,7 +335,7 @@ export class View extends Observable {
    * @param  {View|ViewList} child Child View/ViewList to be removed
    * @return {View}
    */
-  removeChild (child) {
+  removeChild (child: View|ViewList) {
     if (!child.parent) {
       return this;
     }
@@ -354,13 +353,13 @@ export class View extends Observable {
    * @param  {*} data Any data
    * @return {View}
    */
-  update (data) {
+  update (data: any): void {
     this.trigger(EVENT.update, data);
   }
   /**
    * Destroy View (remove listeners, children, etc..)
    */
-  destroy () {
+  destroy (): void {
     if (this.parent) this.parent.removeChild(this);
     this.trigger(EVENT.destroy);
     this.setChildren([]);

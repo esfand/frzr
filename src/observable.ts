@@ -1,15 +1,18 @@
 
 export class Observable {
+  
+   /**
+     * Listeners cache
+     * @type {Object}
+     */
+  listeners: Object = {};
+  
+  
   /**
    * Inits listeners
    * @return {Observable}
    */
   constructor () {
-    /**
-     * Listeners cache
-     * @type {Object}
-     */
-    this.listeners = {};
   }
   /**
    * Add listener by name
@@ -17,7 +20,7 @@ export class Observable {
    * @param  {Function} callback   Listener callback
    * @return {Observable}
    */
-  on (name, callback) {
+  on (name: string, callback: Function): Observable {
     if (!this.listeners[name]) this.listeners[name] = [];
 
     this.listeners[name].push({ callback, one: false });
@@ -30,7 +33,7 @@ export class Observable {
    * @param  {Function} callback   Listener callback
    * @return {Observable}
    */
-  one (name, callback) {
+  one (name: string, callback: Function): Observable {
     if (!this.listeners[name]) this.listeners[name] = [];
 
     this.listeners[name].push({ callback, one: true });
@@ -43,7 +46,7 @@ export class Observable {
    * @param  {*} [...args] [description]
    * @return {Observable}
    */
-  trigger (name, ...args) {
+  trigger (name: string, ...args: any[]): Observable {
     const listeners = this.listeners[name];
 
     if (!listeners) {
@@ -66,7 +69,7 @@ export class Observable {
    * @param  {Function} [callback] Listener callback
    * @return {Observable}
    */
-  off (name, callback) {
+  off (name: string, callback: Function): Observable {
     if (typeof name === 'undefined') {
       this.listeners = {};
     } else if (typeof callback === 'undefined') {

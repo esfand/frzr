@@ -4,7 +4,7 @@
  * @param  {Array} array    source array
  * @param  {Function} iterator gets called: iterator(array[i], i)
  */
-export function each (array, iterator) {
+export function each (array: any[], iterator: (item: any, idx: number) => void): void {
   for (let i = 0; i < array.length; i++) {
     iterator(array[i], i);
   }
@@ -15,14 +15,14 @@ export function each (array, iterator) {
  * @param  {Array} array Array to be shuffled
  * @return {Array}       Shuffled Array
  */
-export function shuffle (array) {
+export function shuffle (array: any[]): any[] {
   if (!array || !array.length) {
     return array;
   }
 
   for (let i = array.length - 1; i > 0; i--) {
-    const rnd = Math.random() * i | 0;
-    const temp = array[i];
+    const rnd: number = Math.random() * i | 0;
+    const temp: any = array[i];
 
     array[i] = array[rnd];
     array[rnd] = temp;

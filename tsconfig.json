@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "ES6",
+        "outDir": "./build",
+        "rootDir": "./src",
+        "suppressImplicitAnyIndexErrors": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "declaration": true
+    },
+    "files": [
+        "./src/el.ts",
+        "./src/utils.ts",
+        "./src/observable.ts",
+        "./src/view.ts",
+        "./src/viewlist.ts"
+    ]
+}

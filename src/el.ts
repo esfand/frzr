@@ -4,8 +4,8 @@
  * @param  {Object} [attributes={}]   attributes/text/HTML
  * @return {HTMLElement}         Returns pure HTMLElement
  */
-export function el (tagName = 'div', attributes = {}) {
-  const _el = document.createElement(tagName);
+export function el (tagName: string = 'div', attributes: Object = {}): HTMLElement {
+  const _el: HTMLElement = document.createElement(tagName);
 
   for (const key in attributes) {
     if (key === 'text') {
