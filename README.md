@@ -3,7 +3,7 @@
 
 Cool new javascript view library.
 
-Made with ♥ + ES6 + https://pbs.twimg.com/profile_images/2660272602/87a5a0fdc86455c3f94b0b0eebfdb1b9_bigger.png.
+Made with ♥ + ES6 + ![](https://pbs.twimg.com/profile_images/2660272602/87a5a0fdc86455c3f94b0b0eebfdb1b9_bigger.png).
 
 [![FRZR logo](https://frzr.js.org/img/logo.svg)](https://frzr.js.org)
 
